@@ -1,17 +1,36 @@
 import ImageCard from "@/components/common/ImageCard";
-import { ImageProps } from "@/interfaces";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const Home: React.FC = () => {
   const [prompt, setPrompt] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
-  const [generatedImages, setGeneratedImages] = useState<ImageProps[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleGenerateImage = async () => {
-    console.log("Generating Image");
-    console.log(process.env.NEXT_PUBLIC_GPT_API_KEY);
-    // You can add your image generation logic here later
+    if (!prompt.trim()) return; // avoid empty prompt
+
+    setIsLoading(true);
+    try {
+      const resp = await fetch('/api/generate-image', {
+        method: 'POST',
+        body: JSON.stringify({ prompt }),
+        headers: { 'Content-type': 'application/json' }
+      });
+
+      if (!resp.ok) {
+        setIsLoading(false);
+        alert("Failed to generate image");
+        return;
+      }
+
+      const data = await resp.json();
+      setImageUrl(data.message);
+    } catch (error) {
+      alert("Error generating image");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -29,6 +48,7 @@ const Home: React.FC = () => {
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Enter your prompt here..."
             className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+            disabled={isLoading}
           />
           <button
             onClick={handleGenerateImage}
@@ -39,13 +59,11 @@ const Home: React.FC = () => {
           </button>
         </div>
 
-        {/* Show generated image if imageUrl exists */}
         {imageUrl && (
           <ImageCard
-            action={(imagePath: string) => setImageUrl(imagePath)}
+            action={() => setImageUrl("")} // maybe clear image on click
             imageUrl={imageUrl}
             prompt={prompt}
-            width="300px" // optional width to control styling
           />
         )}
       </div>
