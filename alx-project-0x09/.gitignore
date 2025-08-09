@@ -1,0 +1,47 @@
+# Node modules
+/node_modules/
+
+# Yarn PnP files
+/.pnp
+.pnp.*
+
+# Yarn cache and releases
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Coverage directory
+/coverage/
+
+# Next.js build outputs
+/.next/
+/out/
+
+# Production build
+/build/
+
+# Mac system files
+.DS_Store
+
+# SSL and key files
+*.pem
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment variables (exclude all env files starting with .env)
+/.env.local
+.env.*.local
+.env
+
+# Vercel deployment directory
+.vercel/
+
+# TypeScript build info files
+*.tsbuildinfo
+next-env.d.ts
